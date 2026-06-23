@@ -4,7 +4,7 @@
 <div class="space-y-5">
     <div class="w-full max-w-[800px]">
         <h3 class="font-semibold text-gray-800 text-lg dark:text-white/90 sm:text-xl">
-            Daftar Aset Gudang (LogiTrack)
+            Daftar Aset Gudang
         </h3>
         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
             Pantau seluruh logistik dan aset operasional internal perusahaan secara real-time.
