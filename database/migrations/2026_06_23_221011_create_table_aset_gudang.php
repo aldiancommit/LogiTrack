@@ -1,0 +1,31 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('aset_gudang', function (Blueprint $table) {
+            $table->id();
+            $table->string('nama_barang');
+            $table->string('kode_serial', 50)->unique();
+            $table->enum('kondisi', ['bagus', 'bekas'])->default('bagus');
+            $table->integer('jumlah_stok')->default(0);
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('aset_gudang');
+    }
+};

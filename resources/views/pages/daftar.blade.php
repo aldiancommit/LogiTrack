@@ -101,64 +101,52 @@
                     </thead>
 
                     <tbody class="text-gray-900 dark:text-gray-100 divide-y divide-gray-100 dark:divide-gray-800/50">
-                        <tr
-                            class="border-b border-gray-200 dark:border-gray-800 hover:bg-gray-50/80 dark:hover:bg-white/[0.02] transition-colors">
-                            <td class="pl-6 pr-4 py-4 text-center font-medium text-gray-500 dark:text-gray-400">1</td>
+                        @php $no = 1; @endphp
+                        @foreach ($asets as $aset)
+                            <tr
+                                class="border-b border-gray-200 dark:border-gray-800 hover:bg-gray-50/80 dark:hover:bg-white/[0.02] transition-colors">
+                                <td class="pl-6 pr-4 py-4 text-center font-medium text-gray-500 dark:text-gray-400">
+                                    {{ $no++ }}</td>
 
-                            <td class="px-9 py-4 font-normal text-gray-900 dark:text-white">MacBook Pro M3</td>
-                            <td class="px-13 py-4 font-mono text-xs text-gray-700 dark:text-gray-300">SN-MAC-001</td>
-                            <td class="px-15 py-4">
-                                <span
-                                    class="inline-flex rounded-full text-xs font-semibold bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-400">
-                                    Baru
-                                </span>
-                            </td>
-                            <td class="px-2 py-4 text-center font-normal text-gray-900 dark:text-white">5</td>
-                            <td class="px-10.5 py-4 text-right text-xs text-gray-600 dark:text-gray-400 font-mono">
-                                24-06-2026
-                                10:30</td>
+                                <td class="px-9 py-4 font-normal text-gray-900 dark:text-white">
+                                    {{ $aset->nama_barang }}
+                                </td>
+                                <td class="px-13 py-4 font-mono text-xs text-gray-700 dark:text-gray-300">
+                                    {{ $aset->kode_serial }}
+                                </td>
+                                <td class="px-15 py-4">
+                                    @if (strtolower($aset->kondisi) === 'bagus')
+                                        <span
+                                            class="inline-flex rounded-full text-xs font-semibold bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-400">
+                                            Baru
+                                        </span>
+                                    @elseif (strtolower($aset->kondisi) === 'bekas')
+                                        <span
+                                            class="inline-flex rounded-full text-xs font-semibold bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400">
+                                            Bekas
+                                        </span>
+                                    @endif
+                                </td>
+                                <td class="px-2 py-4 text-center font-normal text-gray-900 dark:text-white">
+                                    {{ $aset->jumlah_stok }}
+                                </td>
+                                <td class="px-10.5 py-4 text-right text-xs text-gray-600 dark:text-gray-400 font-mono">
+                                    {{ $aset->updated_at->format('d M Y H:i') }}
+                                </td>
 
-                            <td class="pl-4 pr-6 py-4 text-center">
-                                <button type="button"
-                                    class="inline-flex items-center justify-center w-8 h-8 rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/10 dark:hover:text-white transition-colors focus:outline-none">
-                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M12 10a2 2 0 100 4 2 2 0 000-4zm-7 0a2 2 0 100 4 2 2 0 000-4zm14 0a2 2 0 100 4 2 2 0 000-4z">
-                                        </path>
-                                    </svg>
-                                </button>
-                            </td>
-                        </tr>
-                        <tr
-                            class="border-b border-gray-200 dark:border-gray-800 hover:bg-gray-50/80 dark:hover:bg-white/[0.02] transition-colors">
-                            <td class="pl-6 pr-4 py-4 text-center font-medium text-gray-500 dark:text-gray-400">2</td>
-
-                            <td class="px-9 py-4 font-normal text-gray-900 dark:text-white">MacBook Pro M3</td>
-                            <td class="px-13 py-4 font-mono text-xs text-gray-700 dark:text-gray-300">SN-MAC-001</td>
-                            <td class="px-15 py-4">
-                                <span
-                                    class="inline-flex rounded-full text-xs font-semibold bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400">
-                                    Bekas
-                                </span>
-                            </td>
-                            <td class="px-2 py-4 text-center font-normal text-gray-900 dark:text-white">5</td>
-                            <td class="px-10.5 py-4 text-right text-xs text-gray-600 dark:text-gray-400 font-mono">
-                                24-06-2026
-                                10:30</td>
-
-                            <td class="pl-4 pr-6 py-4 text-center">
-                                <button type="button"
-                                    class="inline-flex items-center justify-center w-8 h-8 rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/10 dark:hover:text-white transition-colors focus:outline-none">
-                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M12 10a2 2 0 100 4 2 2 0 000-4zm-7 0a2 2 0 100 4 2 2 0 000-4zm14 0a2 2 0 100 4 2 2 0 000-4z">
-                                        </path>
-                                    </svg>
-                                </button>
-                            </td>
-                        </tr>
+                                <td class="pl-4 pr-6 py-4 text-center">
+                                    <button type="button"
+                                        class="inline-flex items-center justify-center w-8 h-8 rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/10 dark:hover:text-white transition-colors focus:outline-none">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M12 10a2 2 0 100 4 2 2 0 000-4zm-7 0a2 2 0 100 4 2 2 0 000-4zm14 0a2 2 0 100 4 2 2 0 000-4z">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
