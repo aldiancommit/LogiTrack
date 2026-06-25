@@ -24,7 +24,7 @@
                 </div>
 
                 <div class="flex items-center gap-2.5 sm:mt-0">
-                    <button type="button"
+                    <a href="{{ route('pages.gudang.export', request()->query()) }}"
                         class="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700/50 transition-colors">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                             xmlns="http://www.w3.org/2000/svg">
@@ -32,7 +32,7 @@
                                 d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                         </svg>
                         Export Data
-                    </button>
+                    </a>
 
                     <a href="{{ route('pages.gudang.create') }}">
                         <button type="button"
@@ -105,7 +105,7 @@
             @endif
 
             {{-- table content-start --}}
-            <div class="-mx-5 sm:-mx-6 overflow-x-auto">
+            <div class="-mx-5 sm:-mx-6 overflow-x-auto min-h-[180px]">
                 <table class="w-full min-w-full border-collapse text-left text-sm whitespace-nowrap">
                     <thead>
                         <tr
@@ -122,13 +122,12 @@
                     </thead>
 
                     <tbody class="text-gray-900 dark:text-gray-100 divide-y divide-gray-100 dark:divide-gray-800/50">
-                        @php $no = 1; @endphp
-                        @foreach ($asets as $aset)
+                        @forelse ($asets as $aset)
                             <tr x-show="!search || $el.dataset.nama.toLowerCase().includes(search.toLowerCase()) || $el.dataset.serial.toLowerCase().includes(search.toLowerCase())"
                                 data-nama="{{ $aset->nama_barang }}" data-serial="{{ $aset->kode_serial }}"
                                 class="border-b border-gray-200 dark:border-gray-800 hover:bg-gray-50/80 dark:hover:bg-white/[0.02] transition-colors">
                                 <td class="pl-6 pr-4 py-4 text-center font-medium text-gray-500 dark:text-gray-400">
-                                    {{ $no++ }}</td>
+                                    {{ ($asets->currentPage() - 1) * $asets->perPage() + $loop->iteration }}</td>
 
                                 <td class="px-9 py-4 font-normal text-gray-900 dark:text-white">
                                     {{ $aset->nama_barang }}
@@ -179,7 +178,7 @@
                                         style="display: none;">
                                         <div class="flex flex-col gap-1">
                                             <!-- Tombol Edit -->
-                                            <a href="/daftar-aset/{{ $aset->id }}/edit"
+                                            <a href="{{ route('pages.gudang.edit', $aset->id) }}"
                                                 class="flex items-center gap-2 rounded-md px-2.5 py-1.5 text-xs font-medium text-amber-600 hover:bg-amber-50 dark:text-amber-500 dark:hover:bg-amber-500/10 transition-colors">
                                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
                                                     stroke-width="2" viewBox="0 0 24 24"
@@ -191,12 +190,11 @@
                                                 Edit
                                             </a>
                                             <!-- Tombol Hapus -->
-                                            <form action="/daftar-aset/{{ $aset->id }}" method="POST"
-                                                class="m-0"
-                                                onsubmit="return confirm('Apakah Anda yakin ingin menghapus aset ini?')">
+                                            <form action="{{ route('pages.gudang.destroy', $aset->id) }}" method="POST"
+                                                class="m-0">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit"
+                                                <button type="button" onclick="confirmDelete(this.form)"
                                                     class="flex items-center gap-2 rounded-md px-2.5 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 dark:text-red-500 dark:hover:bg-red-500/10 transition-colors w-full text-left">
                                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor"
                                                         stroke-width="2" viewBox="0 0 24 24"
@@ -212,12 +210,158 @@
                                     </div>
                                 </td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="7" class="px-4 py-12 text-center">
+                                    <div>
+                                        <div class="flex flex-col items-center justify-center space-y-4">
+                                            <!-- Icon Box Kosong Modern -->
+                                            <div
+                                                class="flex items-center justify-center w-12 h-12 rounded-xl bg-blue-50 text-dark-600 dark:bg-blue-500/10 dark:text-blue-400 shadow-sm">
+                                                <svg class="w-6 h-6" fill="none" stroke="currentColor"
+                                                    stroke-width="1.8" viewBox="0 0 24 24"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z">
+                                                    </path>
+                                                </svg>
+                                            </div>
+
+                                            <div class="space-y-1.5">
+                                                <h4
+                                                    class="font-bold text-gray-900 dark:text-white text-base tracking-tight">
+                                                    Belum Ada Data Aset
+                                                </h4>
+                                                <p class="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
+                                                    Data logistik atau aset operasional Anda belum terdaftar di gudang saat
+                                                    ini.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
             {{-- table content-end --}}
 
+            <!-- Pagination Start -->
+            @if ($asets->hasPages())
+                <div class="flex items-center justify-between border-t border-gray-100 dark:border-gray-800/60 pt-5 mt-4">
+                    <!-- Mobile View -->
+                    <div class="flex flex-1 justify-between sm:hidden">
+                        @if ($asets->onFirstPage())
+                            <span class="inline-flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-white/[0.02] px-4 py-2 text-sm font-medium text-gray-400 dark:text-gray-600 cursor-not-allowed">
+                                Sebelumnya
+                            </span>
+                        @else
+                            <a href="{{ $asets->previousPageUrl() }}" class="inline-flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-transparent px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors">
+                                Sebelumnya
+                            </a>
+                        @endif
+
+                        @if ($asets->hasMorePages())
+                            <a href="{{ $asets->nextPageUrl() }}" class="inline-flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-transparent px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors">
+                                Selanjutnya
+                            </a>
+                        @else
+                            <span class="inline-flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-white/[0.02] px-4 py-2 text-sm font-medium text-gray-400 dark:text-gray-600 cursor-not-allowed">
+                                Selanjutnya
+                            </span>
+                        @endif
+                    </div>
+
+                    <!-- Desktop View -->
+                    <div class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">
+                                Menampilkan
+                                <span class="font-semibold text-gray-900 dark:text-white">{{ $asets->firstItem() }}</span>
+                                sampai
+                                <span class="font-semibold text-gray-900 dark:text-white">{{ $asets->lastItem() }}</span>
+                                dari
+                                <span class="font-semibold text-gray-900 dark:text-white">{{ $asets->total() }}</span>
+                                aset
+                            </p>
+                        </div>
+                        <div>
+                            <nav class="inline-flex items-center gap-1.5" aria-label="Pagination">
+                                {{-- Button Sebelumnya --}}
+                                @if ($asets->onFirstPage())
+                                    <span class="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-white/[0.02] text-gray-400 dark:text-gray-600 cursor-not-allowed">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"></path>
+                                        </svg>
+                                    </span>
+                                @else
+                                    <a href="{{ $asets->previousPageUrl() }}" class="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-transparent text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"></path>
+                                        </svg>
+                                    </a>
+                                @endif
+
+                                {{-- Page Numbers --}}
+                                @foreach ($asets->getUrlRange(1, $asets->lastPage()) as $page => $url)
+                                    @if ($page == $asets->currentPage())
+                                        <span class="inline-flex items-center justify-center min-w-9 h-9 px-3 rounded-lg bg-blue-600 text-sm font-semibold text-white shadow-theme-xs">
+                                            {{ $page }}
+                                        </span>
+                                    @else
+                                        <a href="{{ $url }}" class="inline-flex items-center justify-center min-w-9 h-9 px-3 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-transparent text-sm font-medium text-gray-700 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors">
+                                            {{ $page }}
+                                        </a>
+                                    @endif
+                                @endforeach
+
+                                {{-- Button Selanjutnya --}}
+                                @if ($asets->hasMorePages())
+                                    <a href="{{ $asets->nextPageUrl() }}" class="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-transparent text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"></path>
+                                        </svg>
+                                    </a>
+                                @else
+                                    <span class="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-white/[0.02] text-gray-400 dark:text-gray-600 cursor-not-allowed">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"></path>
+                                        </svg>
+                                    </span>
+                                @endif
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            @endif
+            <!-- Pagination End -->
+
+
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        function confirmDelete(form) {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Data aset yang dihapus tidak dapat dikembalikan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3B82F6', // Menggunakan warna biru TailAdmin
+                cancelButtonColor: '#EF4444', // Menggunakan warna merah
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal',
+                customClass: {
+                    popup: 'dark:bg-gray-900 dark:text-white border dark:border-gray-800 rounded-xl',
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        }
+    </script>
+@endpush
